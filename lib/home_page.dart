@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'prenatal_care_page.dart';
+import 'hospitals_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomeContent(),
+    PrenatalCarePage(),
+    HospitalsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,36 +54,10 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/registration');
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.pregnant_woman),
-              title: const Text('Control prenatal'),
-              onTap: () {
-                Navigator.pushNamed(context, '/prenatal');
-              },
-            ),
           ],
         ),
       ),
-      body: Center(
-        child: CarouselSlider(
-          options: CarouselOptions(
-            height: 200.0,
-            autoPlay: true,
-            enlargeCenterPage: true,
-          ),
-          items: [
-            'assets/image1.jpg',
-            'assets/image2.jpg',
-            'assets/image3.jpg',
-          ].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Image.asset(i, fit: BoxFit.cover);
-              },
-            );
-          }).toList(),
-        ),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -78,15 +73,37 @@ class HomePage extends StatelessWidget {
             label: 'Hospitales',
           ),
         ],
-        currentIndex: 0, // Asume que estás en la primera pestaña
-        selectedItemColor: Colors.deepPurple,
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.pushNamed(context, '/prenatal');
-          } else if (index == 2) {
-            Navigator.pushNamed(context, '/hospitals');
-          }
-        },
+        currentIndex: _selectedIndex,
+        selectedItemColor: Color.fromARGB(255, 42, 67, 179),
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 200.0,
+          autoPlay: true,
+          enlargeCenterPage: true,
+        ),
+        items: [
+          'assets/image1.jpg',
+          'assets/image2.jpg',
+          'assets/image3.jpg',
+        ].map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Image.asset(i, fit: BoxFit.cover);
+            },
+          );
+        }).toList(),
       ),
     );
   }

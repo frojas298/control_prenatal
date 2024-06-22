@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'database_helper.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   const RegistrationFormPage({super.key});
@@ -9,6 +10,7 @@ class RegistrationFormPage extends StatefulWidget {
 
 class _RegistrationFormPageState extends State<RegistrationFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final dbHelper = DatabaseHelper();
   String? _name;
   DateTime? _birthDate;
   bool _isFirstTimePregnant = false;
@@ -35,6 +37,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Nombre'),
                 onSaved: (value) => _name = value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese un nombre';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
@@ -56,6 +64,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                 controller: TextEditingController(
                   text: _birthDate == null ? '' : _birthDate!.toLocal().toString().split(' ')[0],
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor seleccione una fecha';
+                  }
+                  return null;
+                },
               ),
               SwitchListTile(
                 title: const Text('Primera vez embarazada'),
@@ -70,6 +84,12 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                 decoration: const InputDecoration(labelText: 'Número de embarazo'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _pregnancyCount = int.parse(value ?? '0'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese el número de embarazo';
+                  }
+                  return null;
+                },
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -77,7 +97,15 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      // Save the data
+                      dbHelper.insertUsuario({
+                        'Nombre': _name,
+                        'Fecha_Nacimiento': _birthDate!.toIso8601String(),
+                        'Primer_Embarazo': _isFirstTimePregnant ? 1 : 0,
+                        'Numero_Embarazo': _pregnancyCount
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Formulario enviado de manera exitosa')),
+                      );
                       Navigator.pop(context);
                     }
                   },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'database_helper.dart';
 
 class PrenatalCarePage extends StatelessWidget {
   const PrenatalCarePage({super.key});
@@ -8,12 +9,6 @@ class PrenatalCarePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Control Prenatal'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(8.0),
@@ -65,8 +60,11 @@ class PrenatalCareDetailsPage extends StatefulWidget {
 
 class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _imc;
-  String? _talla;
+  final dbHelper = DatabaseHelper();
+  String? _examenesClinicos;
+  String? _visitasGinecologicas;
+  double? _imc;
+  double? _talla;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +79,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
         ),
       ),
       body: Container(
-        color: Colors.white, // Asegura el fondo blanco
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -92,23 +90,41 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                   'Exámenes clínicos o laboratorios',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                DataTable(columns: const [
-                  DataColumn(label: Text('Tipo')),
-                  DataColumn(label: Text('Fecha')),
-                  DataColumn(label: Text('Resultado')),
-                ], rows: const [
-                  DataRow(cells: [
-                    DataCell(Text('Examen de sangre')),
-                    DataCell(Text('15/06/2023')),
-                    DataCell(Text('Normal')),
-                  ]),
-                ]),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Exámenes Clínicos',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  onSaved: (value) => _examenesClinicos = value,
+                ),
                 const SizedBox(height: 16.0),
                 const Text(
                   'Visitas ginecológicas',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                // Añadir más detalles de visitas ginecológicas
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Visitas Ginecológicas',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  onSaved: (value) => _visitasGinecologicas = value,
+                ),
                 const SizedBox(height: 16.0),
                 const Text(
                   'Exámenes Físicos',
@@ -138,7 +154,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                     }
                     return null;
                   },
-                  onSaved: (value) => _imc = value,
+                  onSaved: (value) => _imc = double.tryParse(value!),
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -165,7 +181,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                     }
                     return null;
                   },
-                  onSaved: (value) => _talla = value,
+                  onSaved: (value) => _talla = double.tryParse(value!),
                 ),
                 const SizedBox(height: 16.0),
                 Center(
@@ -173,6 +189,14 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
+                        dbHelper.insertControlPrenatal({
+                          'ID_Usuario': 1, // ID de ejemplo, debes obtener el ID real del usuario
+                          'Semana': int.parse(widget.weekRange.split('-')[0]),
+                          'Examenes_Clinicos': _examenesClinicos,
+                          'Visitas_Ginecologicas': _visitasGinecologicas,
+                          'IMC': _imc,
+                          'Talla': _talla
+                        });
                         showDialog(
                           context: context,
                           builder: (context) {
