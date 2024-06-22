@@ -8,12 +8,7 @@ class HospitalsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hospitales'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // Eliminamos el leading para quitar la flecha de regreso
       ),
       body: Center(
         child: const Text('Información sobre hospitales'),

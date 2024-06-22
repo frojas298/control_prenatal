@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.deepPurple,
+                color: Color.fromARGB(255, 38, 85, 179),
               ),
               child: Text(
                 'Menu',
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 42, 67, 179),
+        selectedItemColor: Colors.deepPurple,
         onTap: _onItemTapped,
       ),
     );
