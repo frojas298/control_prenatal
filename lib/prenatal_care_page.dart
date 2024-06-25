@@ -71,6 +71,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
   String? _visitasGinecologicas;
   double? _imc;
   double? _talla;
+  List<Map<String, dynamic>> _controlPrenatalData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -90,139 +91,167 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
           padding: const EdgeInsets.all(8.0),
           child: Form(
             key: _formKey,
-            child: ListView(
+            child: Column(
               children: <Widget>[
-                const Text(
-                  'Exámenes clínicos o laboratorios',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Exámenes Clínicos',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      const Text(
+                        'Exámenes clínicos o laboratorios',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ),
-                  onSaved: (value) => _examenesClinicos = value,
-                ),
-                const SizedBox(height: 16.0),
-                const Text(
-                  'Visitas ginecológicas',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Visitas Ginecológicas',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Exámenes Clínicos',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        onSaved: (value) => _examenesClinicos = value,
                       ),
-                    ),
-                  ),
-                  onSaved: (value) => _visitasGinecologicas = value,
-                ),
-                const SizedBox(height: 16.0),
-                const Text(
-                  'Exámenes Físicos',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'IMC',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Visitas ginecológicas',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese un valor';
-                    }
-                    final n = num.tryParse(value);
-                    if (n == null) {
-                      return 'Por favor ingrese un valor numérico';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _imc = double.tryParse(value!),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Talla',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Visitas Ginecológicas',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        onSaved: (value) => _visitasGinecologicas = value,
                       ),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese un valor';
-                    }
-                    final n = num.tryParse(value);
-                    if (n == null) {
-                      return 'Por favor ingrese un valor numérico';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _talla = double.tryParse(value!),
-                ),
-                const SizedBox(height: 16.0),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        dbHelper.insertControlPrenatal({
-                          'ID_Usuario': 1, // ID de ejemplo, debes obtener el ID real del usuario
-                          'Semana': int.parse(widget.weekRange.split('-')[0]),
-                          'Examenes_Clinicos': _examenesClinicos,
-                          'Visitas_Ginecologicas': _visitasGinecologicas,
-                          'IMC': _imc,
-                          'Talla': _talla
-                        });
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Éxito'),
-                              content: const Text('Formulario enviado de manera exitosa'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        'Exámenes Físicos',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'IMC',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese un valor';
+                          }
+                          final n = num.tryParse(value);
+                          if (n == null) {
+                            return 'Por favor ingrese un valor numérico';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _imc = double.tryParse(value!),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Talla',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese un valor';
+                          }
+                          final n = num.tryParse(value);
+                          if (n == null) {
+                            return 'Por favor ingrese un valor numérico';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _talla = double.tryParse(value!),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              dbHelper.insertControlPrenatal({
+                                'ID_Usuario': 1, // ID de ejemplo, debes obtener el ID real del usuario
+                                'Semana': int.parse(widget.weekRange.split('-')[0]),
+                                'Examenes_Clinicos': _examenesClinicos,
+                                'Visitas_Ginecologicas': _visitasGinecologicas,
+                                'IMC': _imc,
+                                'Talla': _talla
+                              });
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Éxito'),
+                                    content: const Text('Formulario enviado de manera exitosa'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           },
-                        );
-                      }
+                          child: const Text('Enviar'),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _queryControlPrenatal();
+                          },
+                          child: const Text('Consultar Datos Guardados'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _controlPrenatalData.length,
+                    itemBuilder: (context, index) {
+                      final data = _controlPrenatalData[index];
+                      return ListTile(
+                        title: Text('Semana: ${data['Semana']}'),
+                        subtitle: Text(
+                            'Exámenes Clínicos: ${data['Examenes_Clinicos']}, Visitas Ginecológicas: ${data['Visitas_Ginecologicas']}, IMC: ${data['IMC']}, Talla: ${data['Talla']}'),
+                      );
                     },
-                    child: const Text('Enviar'),
                   ),
                 ),
               ],
@@ -231,5 +260,12 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
         ),
       ),
     );
+  }
+
+  void _queryControlPrenatal() async {
+    final allRows = await dbHelper.queryAllControlesPrenatales();
+    setState(() {
+      _controlPrenatalData = allRows;
+    });
   }
 }
