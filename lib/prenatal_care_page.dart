@@ -9,6 +9,12 @@ class PrenatalCarePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Control Prenatal'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(8.0),
@@ -79,7 +85,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        color: Colors.white, // Asegura el fondo blanco
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(

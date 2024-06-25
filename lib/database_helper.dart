@@ -36,7 +36,7 @@ class DatabaseHelper {
         Numero_Embarazo INTEGER NOT NULL
       )
     ''');
-    
+
     await db.execute('''
       CREATE TABLE Controles_Prenatales (
         ID_Control INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +49,7 @@ class DatabaseHelper {
         FOREIGN KEY (ID_Usuario) REFERENCES Usuarios (ID_Usuario)
       )
     ''');
-    
+
     await db.execute('''
       CREATE TABLE Hospitales (
         ID_Hospital INTEGER PRIMARY KEY AUTOINCREMENT,

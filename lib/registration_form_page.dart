@@ -66,13 +66,13 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor seleccione una fecha';
+                    return 'Selecciona una fecha ';
                   }
                   return null;
                 },
               ),
               SwitchListTile(
-                title: const Text('Primera vez embarazada'),
+                title: const Text('Primer embarazo'),
                 value: _isFirstTimePregnant,
                 onChanged: (bool value) {
                   setState(() {
@@ -81,7 +81,7 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Número de embarazo'),
+                decoration: const InputDecoration(labelText: 'Número de embarazos'),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _pregnancyCount = int.parse(value ?? '0'),
                 validator: (value) {
