@@ -33,7 +33,8 @@ class DatabaseHelper {
         Nombre TEXT NOT NULL,
         Fecha_Nacimiento TEXT NOT NULL,
         Primer_Embarazo INTEGER NOT NULL,
-        Numero_Embarazo INTEGER NOT NULL
+        Numero_Embarazo INTEGER NOT NULL,
+        Password TEXT NOT NULL
       )
     ''');
 
@@ -94,6 +95,17 @@ class DatabaseHelper {
   Future<int> insertUsuario(Map<String, dynamic> row) async {
     Database db = await database;
     return await db.insert('Usuarios', row);
+  }
+
+  Future<Map<String, dynamic>?> getUsuario(String nombre, String password) async {
+    Database db = await database;
+    List<Map<String, dynamic>> result = await db.query('Usuarios', 
+      where: 'Nombre = ? AND Password = ?', 
+      whereArgs: [nombre, password]);
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return null;
   }
 
   Future<List<Map<String, dynamic>>> queryAllUsuarios() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 import 'home_page.dart';
 import 'registration_form_page.dart';
 import 'prenatal_care_page.dart';
@@ -21,14 +22,13 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => const LoginPage(),
+        '/home': (context) => HomePage(nombre: ''), // This line is needed for route definition
         '/registration': (context) => const RegistrationFormPage(),
         '/prenatal': (context) => const PrenatalCarePage(),
         '/hospitals': (context) => const HospitalsPage(),
+        '/login': (context) => const LoginPage(), // Ruta para cerrar sesión
       },
     );
   }
 }
-
-
-

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
+import 'home_page.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   const RegistrationFormPage({super.key});
@@ -15,7 +16,8 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
   DateTime? _fechaNacimiento;
   bool? _primerEmbarazo;
   int? _numeroEmbarazo;
-  List<Map<String, dynamic>> _usuariosData = [];
+  String? _password;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -165,62 +167,61 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
                       },
                     ),
                     const SizedBox(height: 16.0),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            dbHelper.insertUsuario({
-                              'Nombre': _nombre,
-                              'Fecha_Nacimiento': _fechaNacimiento!.toIso8601String(),
-                              'Primer_Embarazo': _primerEmbarazo! ? 1 : 0,
-                              'Numero_Embarazo': _numeroEmbarazo
-                            });
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Éxito'),
-                                  content: const Text('Formulario enviado de manera exitosa'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                        child: const Text('Enviar'),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Contraseña',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
+                      obscureText: true,
+                      onSaved: (value) => _password = value,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese una contraseña';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16.0),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _queryUsuarios();
-                        },
-                        child: const Text('Consultar Datos Guardados'),
-                      ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await dbHelper.insertUsuario({
+                                    'Nombre': _nombre,
+                                    'Fecha_Nacimiento': _fechaNacimiento!.toIso8601String(),
+                                    'Primer_Embarazo': _primerEmbarazo! ? 1 : 0,
+                                    'Numero_Embarazo': _numeroEmbarazo,
+                                    'Password': _password,
+                                  });
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomePage(nombre: _nombre!),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text('Registrar'),
+                            ),
                     ),
                   ],
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _usuariosData.length,
-                  itemBuilder: (context, index) {
-                    final data = _usuariosData[index];
-                    return ListTile(
-                      title: Text('Nombre: ${data['Nombre']}'),
-                      subtitle: Text(
-                          'Fecha de Nacimiento: ${data['Fecha_Nacimiento']}, Primer Embarazo: ${data['Primer_Embarazo'] == 1 ? 'Sí' : 'No'}, Número de Embarazo: ${data['Numero_Embarazo']}'),
-                    );
-                  },
                 ),
               ),
             ],
@@ -228,12 +229,5 @@ class _RegistrationFormPageState extends State<RegistrationFormPage> {
         ),
       ),
     );
-  }
-
-  void _queryUsuarios() async {
-    final allRows = await dbHelper.queryAllUsuarios();
-    setState(() {
-      _usuariosData = allRows;
-    });
   }
 }

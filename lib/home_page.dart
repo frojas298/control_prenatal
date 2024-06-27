@@ -4,7 +4,9 @@ import 'prenatal_care_page.dart';
 import 'hospitals_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String nombre;
+
+  const HomePage({required this.nombre, super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -37,7 +39,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 38, 85, 179),
+                color: Colors.deepPurple,
               ),
               child: Text(
                 'Menu',
@@ -54,10 +56,28 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/registration');
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Cerrar sesión'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+            ),
           ],
         ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Bienvenido, ${widget.nombre}',
+              style: const TextStyle(fontSize: 24),
+            ),
+          ),
+          Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -71,6 +71,24 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
   String? _visitasGinecologicas;
   double? _imc;
   double? _talla;
+  bool _hemograma = false;
+  bool _urocultivo = false;
+  bool _vdrl = false;
+  bool _hepatitisB = false;
+  bool _citologia = false;
+  bool _glicemia = false;
+  bool _ultrasonido = false;
+  bool _ultrasonidoAneuploide = false;
+  bool _dopplerUterinas = false;
+  bool _ultrasonidoAnatomia = false;
+  bool _doppler = false;
+  bool _cervix = false;
+  bool _glicemiaPost = false;
+  bool _coombs = false;
+  bool _inmunoglobulina = false;
+  bool _ultrasonido3238 = false;
+  bool _vdrl3238 = false;
+  bool _streptococo = false;
   List<Map<String, dynamic>> _controlPrenatalData = [];
 
   @override
@@ -86,7 +104,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
         ),
       ),
       body: Container(
-        color: Colors.white, // Asegura el fondo blanco
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -100,21 +118,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                         'Exámenes clínicos o laboratorios',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Exámenes Clínicos',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        onSaved: (value) => _examenesClinicos = value,
-                      ),
+                      ..._getCheckBoxesForWeek(),
                       const SizedBox(height: 16.0),
                       const Text(
                         'Visitas ginecológicas',
@@ -267,5 +271,178 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
     setState(() {
       _controlPrenatalData = allRows;
     });
+  }
+
+  List<Widget> _getCheckBoxesForWeek() {
+    List<Widget> checkBoxes = [];
+    switch (widget.weekRange) {
+      case '4-8':
+        checkBoxes.addAll([
+          CheckboxListTile(
+            title: const Text('Hemograma/Hto-Hb'),
+            value: _hemograma,
+            onChanged: (value) {
+              setState(() {
+                _hemograma = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Urocultivo y Orina Completa'),
+            value: _urocultivo,
+            onChanged: (value) {
+              setState(() {
+                _urocultivo = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('VDRL-RPR'),
+            value: _vdrl,
+            onChanged: (value) {
+              setState(() {
+                _vdrl = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Ag Superficie Hepatitis B'),
+            value: _hepatitisB,
+            onChanged: (value) {
+              setState(() {
+                _hepatitisB = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Citología cervical'),
+            value: _citologia,
+            onChanged: (value) {
+              setState(() {
+                _citologia = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Glicemia'),
+            value: _glicemia,
+            onChanged: (value) {
+              setState(() {
+                _glicemia = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Ultrasonido por indicación'),
+            value: _ultrasonido,
+            onChanged: (value) {
+              setState(() {
+                _ultrasonido = value!;
+              });
+            },
+          ),
+        ]);
+        break;
+      case '11-14':
+        checkBoxes.addAll([
+          CheckboxListTile(
+            title: const Text('Ultrasonido 11 a 14 semanas para riesgo de aneuploidía (más Bioquimica: BHCG libre PAPP-a, según la disponibilidad)'),
+            value: _ultrasonidoAneuploide,
+            onChanged: (value) {
+              setState(() {
+                _ultrasonidoAneuploide = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Doppler arterias uterinas'),
+            value: _dopplerUterinas,
+            onChanged: (value) {
+              setState(() {
+                _dopplerUterinas = value!;
+              });
+            },
+          ),
+        ]);
+        break;
+      case '20-24':
+        checkBoxes.addAll([
+          CheckboxListTile(
+            title: const Text('Ultrasonido anatomía y marcadores aneuploidía Doppler de arterias uterinas (si no se realizó en examen US previo)'),
+            value: _ultrasonidoAnatomia,
+            onChanged: (value) {
+              setState(() {
+                _ultrasonidoAnatomia = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Evaluación del cervix, según disponibilidad'),
+            value: _cervix,
+            onChanged: (value) {
+              setState(() {
+                _cervix = value!;
+              });
+            },
+          ),
+        ]);
+        break;
+      case '26-28':
+        checkBoxes.addAll([
+          CheckboxListTile(
+            title: const Text('Glicemia post prandial, tamizaje de diabetes Coombs Indirecto Rh no sensibilizada'),
+            value: _glicemiaPost,
+            onChanged: (value) {
+              setState(() {
+                _glicemiaPost = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Administración inmunoglobulina anti Rho (Rh no sensibilizada) segun sensibilidad'),
+            value: _inmunoglobulina,
+            onChanged: (value) {
+              setState(() {
+                _inmunoglobulina = value!;
+              });
+            },
+          ),
+        ]);
+        break;
+      case '32-38':
+        checkBoxes.addAll([
+          CheckboxListTile(
+            title: const Text('Ultrasonido'),
+            value: _ultrasonido3238,
+            onChanged: (value) {
+              setState(() {
+                _ultrasonido3238 = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Repetir VDRL/RPR, Hcto-Hb'),
+            value: _vdrl3238,
+            onChanged: (value) {
+              setState(() {
+                _vdrl3238 = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Cultivo Streptococo B'),
+            value: _streptococo,
+            onChanged: (value) {
+              setState(() {
+                _streptococo = value!;
+              });
+            },
+          ),
+        ]);
+        break;
+      default:
+        break;
+    }
+    return checkBoxes;
   }
 }
