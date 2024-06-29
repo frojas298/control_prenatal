@@ -137,6 +137,12 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                             ),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese las visitas ginecológicas';
+                          }
+                          return null;
+                        },
                         onSaved: (value) => _visitasGinecologicas = value,
                       ),
                       const SizedBox(height: 16.0),
@@ -160,7 +166,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese un valor';
+                            return 'Por favor ingrese el IMC';
                           }
                           final n = num.tryParse(value);
                           if (n == null) {
@@ -187,7 +193,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese un valor';
+                            return 'Por favor ingrese la talla';
                           }
                           final n = num.tryParse(value);
                           if (n == null) {
@@ -200,36 +206,7 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
                       const SizedBox(height: 16.0),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              dbHelper.insertControlPrenatal({
-                                'ID_Usuario': 1, // ID de ejemplo, debes obtener el ID real del usuario
-                                'Semana': int.parse(widget.weekRange.split('-')[0]),
-                                'Examenes_Clinicos': _examenesClinicos,
-                                'Visitas_Ginecologicas': _visitasGinecologicas,
-                                'IMC': _imc,
-                                'Talla': _talla
-                              });
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Éxito'),
-                                    content: const Text('Formulario enviado de manera exitosa'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
+                          onPressed: _showConfirmationDialog,
                           child: const Text('Enviar'),
                         ),
                       ),
@@ -263,6 +240,64 @@ class _PrenatalCareDetailsPageState extends State<PrenatalCareDetailsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showConfirmationDialog() {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Confirmar cambios'),
+            content: const Text('¿Desea enviar los datos ingresados?'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Sí'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _submitForm();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _submitForm() {
+    _formKey.currentState!.save();
+    dbHelper.insertControlPrenatal({
+      'ID_Usuario': 1, // ID de ejemplo, debes obtener el ID real del usuario
+      'Semana': int.parse(widget.weekRange.split('-')[0]),
+      'Examenes_Clinicos': _examenesClinicos,
+      'Visitas_Ginecologicas': _visitasGinecologicas,
+      'IMC': _imc,
+      'Talla': _talla
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Éxito'),
+          content: const Text('Formulario enviado de manera exitosa'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 

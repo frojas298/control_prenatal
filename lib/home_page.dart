@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Prenatal Care App'),
+        title: const Text('App Control Prenatal'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.account_circle),
-              title: const Text('Cuenta'),
+              title: const Text('Editar Cuenta'),
               onTap: () {
                 Navigator.pushNamed(context, '/registration');
               },
