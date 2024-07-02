@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Bienvenida, ${widget.nombre}',
+              'Bienvenida, ${capitalize(widget.nombre)}',
               style: const TextStyle(fontSize: 24),
             ),
           ),
@@ -98,6 +98,13 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  String capitalize(String s) {
+    if (s.isEmpty) {
+      return s;
+    }
+    return s[0].toUpperCase() + s.substring(1);
   }
 }
 
