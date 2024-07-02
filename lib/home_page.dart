@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Bienvenida, ${capitalize(widget.nombre)}',
+              'Bienvenida: ${capitalize(widget.nombre)}',
               style: const TextStyle(fontSize: 24),
             ),
           ),
