@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('App Control Prenatal'),
+        title: const Text('Prenatal Care App'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.account_circle),
-              title: const Text('Editar Cuenta'),
+              title: const Text('Cuenta'),
               onTap: () {
                 Navigator.pushNamed(context, '/registration');
               },
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Bienvenido, ${widget.nombre}',
+              'Bienvenida, ${widget.nombre}',
               style: const TextStyle(fontSize: 24),
             ),
           ),
