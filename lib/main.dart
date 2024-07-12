@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Control Prenatal App',
+      title: 'Control Prenatal',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
-        '/home': (context) => HomePage(nombre: ''), // This line is needed for route definition
+        '/home': (context) =>
+            HomePage(nombre: ''), // This line is needed for route definition
         '/registration': (context) => const RegistrationFormPage(),
         '/prenatal': (context) => const PrenatalCarePage(),
         '/hospitals': (context) => const HospitalsPage(),
